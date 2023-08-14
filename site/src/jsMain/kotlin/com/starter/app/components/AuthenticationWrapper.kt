@@ -24,9 +24,10 @@ fun AuthenticationWrapper(content: @Composable () -> Unit) {
 
     LaunchedEffect(Unit) {
         onAuthStateChanged(auth) { user ->
-            if (user) {
+            if (user != null) {
                 authenticated.value = true
-                sessionStorage.setItem("user_id", user.uid.toString())
+                sessionStorage.setItem("user_id", user.uid)
+                sessionStorage.setItem("user_email", user.email)
             } else {
                 authenticated.value = false
                 sessionStorage.clear()

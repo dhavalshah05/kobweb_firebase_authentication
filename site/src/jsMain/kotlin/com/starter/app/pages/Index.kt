@@ -27,7 +27,7 @@ import org.w3c.dom.get
 @Composable
 fun HomePage() {
     val userId = remember {
-        sessionStorage["user_id"]
+        sessionStorage["user_email"]
     }
 
     val scope = rememberCoroutineScope()
