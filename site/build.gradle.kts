@@ -43,6 +43,8 @@ kotlin {
                 implementation(libs.kobweb.silk.core)
                 implementation(libs.kobweb.silk.icons.fa)
                 // implementation(libs.kobwebx.markdown)
+
+                implementation(npm("firebase", "10.1.0"))
             }
         }
     }
