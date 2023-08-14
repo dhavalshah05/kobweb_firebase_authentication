@@ -10,3 +10,8 @@ external fun signInWithEmailAndPassword(auth: dynamic, email: String, password: 
 external fun createUserWithEmailAndPassword(auth: dynamic, email: String, password: String): Promise<dynamic>
 external fun onAuthStateChanged(auth: dynamic, callback: (user: dynamic) -> Unit)
 external fun signOut(auth: dynamic): Promise<dynamic>
+
+external class GoogleAuthProvider {
+
+}
+external fun signInWithPopup(auth: dynamic, provider: dynamic): Promise<dynamic>

@@ -6,7 +6,14 @@ import com.starter.app.firebaseApp
 import com.starter.app.wrappers.getAuth
 import com.starter.app.wrappers.signInWithEmailAndPassword
 import com.starter.app.theme.AlphaTheme
+import com.starter.app.wrappers.GoogleAuthProvider
+import com.starter.app.wrappers.signInWithPopup
+import com.varabyte.kobweb.compose.foundation.layout.Box
+import com.varabyte.kobweb.compose.foundation.layout.Column
+import com.varabyte.kobweb.compose.ui.Alignment
 import com.varabyte.kobweb.compose.ui.Modifier
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
+import com.varabyte.kobweb.compose.ui.modifiers.fillMaxWidth
 import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
@@ -17,27 +24,70 @@ import org.jetbrains.compose.web.dom.Text
 @Page("login")
 @Composable
 fun LoginPage() {
+    AuthenticationWrapper {
+        val auth = remember {
+            getAuth(firebaseApp)
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                LoginWithPasswordOption(auth)
+                LoginWithGoogleOption(auth)
+            }
+        }
+    }
+}
+
+@Composable
+private fun LoginWithGoogleOption(auth: Any) {
     val scope = rememberCoroutineScope()
 
-    AuthenticationWrapper {
-        H1(
-            attrs = Modifier
-                .then(AlphaTheme.typography.latoBold)
-                .onClick {
-                    scope.launch {
-                        val auth = getAuth(firebaseApp)
-                        signInWithEmailAndPassword(auth, "dhaval3@gmail.com", "Abc@123#")
-                            .then<dynamic> {  }
-                            .catch {
-                                val error = decodeFirebaseAuthError(it)
-                                println(error)
-                            }
-                    }
+    H1(
+        attrs = Modifier
+            .then(AlphaTheme.typography.latoBold)
+            .onClick {
+                scope.launch {
+                    val provider = GoogleAuthProvider()
+                    signInWithPopup(auth, provider)
+                        .then<dynamic> { println("Login Success") }
+                        .catch { it.printStackTrace() }
+
                 }
-                .toAttrs()
-        ) {
-            Text("Login Page")
-        }
+            }
+            .toAttrs()
+    ) {
+        Text("Click to login with Google")
+    }
+}
+
+@Composable
+private fun LoginWithPasswordOption(auth: Any) {
+    val scope = rememberCoroutineScope()
+
+    H1(
+        attrs = Modifier
+            .then(AlphaTheme.typography.latoBold)
+            .onClick {
+                scope.launch {
+                    signInWithEmailAndPassword(auth, "dhaval3@gmail.com", "Abc@123#")
+                        .then<dynamic> {  }
+                        .catch {
+                            val error = decodeFirebaseAuthError(it)
+                            println(error)
+                        }
+                }
+            }
+            .toAttrs()
+    ) {
+        Text("Click to login with Password")
     }
 }
 
