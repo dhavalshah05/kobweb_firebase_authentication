@@ -9,16 +9,16 @@ import com.varabyte.kobweb.core.Page
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.Text
 
-@Page
+@Page("login")
 @Composable
-fun HomePage() {
+fun LoginPage() {
     AuthenticationWrapper {
         H1(
             attrs = Modifier
                 .then(AlphaTheme.typography.latoBold)
                 .toAttrs()
         ) {
-            Text("Starter Kobweb")
+            Text("Login Page")
         }
     }
 }
