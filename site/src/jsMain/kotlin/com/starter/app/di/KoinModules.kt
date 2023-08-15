@@ -1,5 +1,6 @@
 package com.starter.app.di
 
+import com.starter.app.data.login.authStateChange.AuthStateObserverUseCase
 import com.starter.app.data.login.emailAndPassword.LoginWithPasswordUseCase
 import com.starter.app.data.login.google.LoginWithGoogleUseCase
 import com.starter.app.data.logout.LogoutUseCase
@@ -60,6 +61,11 @@ object KoinModules {
         factory<LogoutUseCase> {
             val auth: Any = get(qualifier = KoinQualifiers.FirebaseAuth)
             LogoutUseCase(auth)
+        }
+
+        factory<AuthStateObserverUseCase> {
+            val auth: Any = get(qualifier = KoinQualifiers.FirebaseAuth)
+            AuthStateObserverUseCase(auth)
         }
     }
 }

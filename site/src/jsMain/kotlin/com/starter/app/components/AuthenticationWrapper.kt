@@ -5,12 +5,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import com.starter.app.di.KoinQualifiers
+import com.starter.app.data.login.authStateChange.AuthStateObserverUseCase
 import com.starter.app.koinApplication
-import com.starter.app.wrappers.onAuthStateChanged
 import com.varabyte.kobweb.core.PageContext
 import com.varabyte.kobweb.core.rememberPageContext
 import kotlinx.browser.sessionStorage
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.Text
 
@@ -18,8 +18,8 @@ import org.jetbrains.compose.web.dom.Text
 fun AuthenticationWrapper(content: @Composable () -> Unit) {
     val pageContext = rememberPageContext()
 
-    val auth: Any = remember {
-        koinApplication.koin.get(qualifier = KoinQualifiers.FirebaseAuth)
+    val authStateObserverUseCase = remember {
+        koinApplication.koin.get<AuthStateObserverUseCase>()
     }
 
     val authenticated: MutableState<Boolean?> = remember {
@@ -27,7 +27,7 @@ fun AuthenticationWrapper(content: @Composable () -> Unit) {
     }
 
     LaunchedEffect(Unit) {
-        onAuthStateChanged(auth) { user ->
+        authStateObserverUseCase.authState().collectLatest { user ->
             if (user != null) {
                 authenticated.value = true
                 sessionStorage.setItem("user_id", user.uid)
