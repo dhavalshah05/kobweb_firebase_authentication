@@ -3,9 +3,8 @@ package com.starter.app.pages
 import androidx.compose.runtime.*
 import com.starter.app.components.AuthenticationWrapper
 import com.starter.app.data.logout.LogoutUseCase
-import com.starter.app.firebaseApp
+import com.starter.app.koinApplication
 import com.starter.app.theme.AlphaTheme
-import com.starter.app.wrappers.getAuth
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -30,8 +29,9 @@ fun HomePage() {
     }
 
     val scope = rememberCoroutineScope()
+
     val logoutUseCase = remember {
-        LogoutUseCase(getAuth(firebaseApp) as Any)
+        koinApplication.koin.get<LogoutUseCase>()
     }
 
     AuthenticationWrapper {

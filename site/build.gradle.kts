@@ -33,6 +33,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(compose.runtime)
+                implementation("io.insert-koin:koin-core:3.4.0")
             }
         }
 

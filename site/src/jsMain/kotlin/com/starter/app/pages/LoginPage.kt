@@ -4,8 +4,7 @@ import androidx.compose.runtime.*
 import com.starter.app.components.AuthenticationWrapper
 import com.starter.app.data.login.google.LoginWithGoogleUseCase
 import com.starter.app.data.login.emailAndPassword.LoginWithPasswordUseCase
-import com.starter.app.firebaseApp
-import com.starter.app.wrappers.getAuth
+import com.starter.app.koinApplication
 import com.starter.app.theme.AlphaTheme
 import com.starter.app.wrappers.decodeFirebaseAuthError
 import com.varabyte.kobweb.compose.foundation.layout.Box
@@ -25,10 +24,6 @@ import org.jetbrains.compose.web.dom.Text
 @Composable
 fun LoginPage() {
     AuthenticationWrapper {
-        val auth = remember {
-            getAuth(firebaseApp)
-        }
-
         Box(
             modifier = Modifier
                 .fillMaxSize(),
@@ -39,18 +34,19 @@ fun LoginPage() {
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                LoginWithPasswordOption(auth)
-                LoginWithGoogleOption(auth)
+                LoginWithPasswordOption()
+                LoginWithGoogleOption()
             }
         }
     }
 }
 
 @Composable
-private fun LoginWithGoogleOption(auth: Any) {
+private fun LoginWithGoogleOption() {
     val scope = rememberCoroutineScope()
+
     val loginWithGoogleUseCase = remember {
-        LoginWithGoogleUseCase(auth)
+        koinApplication.koin.get<LoginWithGoogleUseCase>()
     }
 
     H1(
@@ -72,10 +68,11 @@ private fun LoginWithGoogleOption(auth: Any) {
 }
 
 @Composable
-private fun LoginWithPasswordOption(auth: Any) {
+private fun LoginWithPasswordOption() {
     val scope = rememberCoroutineScope()
+
     val loginWithPasswordUseCase = remember {
-        LoginWithPasswordUseCase(auth)
+        koinApplication.koin.get<LoginWithPasswordUseCase>()
     }
 
     H1(

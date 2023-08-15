@@ -1,6 +1,7 @@
 package com.starter.app
 
 import androidx.compose.runtime.*
+import com.starter.app.di.KoinModules
 import com.starter.app.wrappers.initializeApp
 import com.varabyte.kobweb.compose.css.BoxSizing
 import com.varabyte.kobweb.compose.css.LineHeight
@@ -16,6 +17,7 @@ import com.varabyte.kobweb.silk.components.style.toModifier
 import com.varabyte.kobweb.silk.init.registerBaseStyle
 
 import org.jetbrains.compose.web.css.*
+import org.koin.core.context.startKoin
 
 @InitSilk
 fun updateTheme(ctx: InitSilkContext) {
@@ -44,24 +46,17 @@ fun updateTheme(ctx: InitSilkContext) {
     }
 }
 
-private val firebaseConfig = js("""
-        {
-            apiKey: "AIzaSyAuVUY_rDs6-UMOQ_0iAic9ipuoINAOupY",
-            authDomain: "sample-transactions-9f089.firebaseapp.com",
-            projectId: "sample-transactions-9f089",
-            storageBucket: "sample-transactions-9f089.appspot.com",
-            messagingSenderId: "345001372729",
-            appId: "1:345001372729:web:5dca1cc09d16ab4df231e8",
-            measurementId: "G-YSTVZJ8GP9"
-        }
-    """)
-
-// Initialize Firebase
-val firebaseApp = initializeApp(firebaseConfig)
+val koinApplication = startKoin {
+    modules(
+        KoinModules.applicationModule,
+        KoinModules.useCaseModule,
+    )
+}
 
 @App
 @Composable
 fun MyApp(content: @Composable () -> Unit) {
+
     SilkApp {
         Surface(SmoothColorStyle.toModifier().minHeight(100.vh)) {
             content()
