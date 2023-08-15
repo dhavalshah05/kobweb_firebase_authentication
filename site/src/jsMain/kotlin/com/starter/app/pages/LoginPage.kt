@@ -2,12 +2,12 @@ package com.starter.app.pages
 
 import androidx.compose.runtime.*
 import com.starter.app.components.AuthenticationWrapper
+import com.starter.app.data.login.google.LoginWithGoogleUseCase
+import com.starter.app.data.login.emailAndPassword.LoginWithPasswordUseCase
 import com.starter.app.firebaseApp
 import com.starter.app.wrappers.getAuth
-import com.starter.app.wrappers.signInWithEmailAndPassword
 import com.starter.app.theme.AlphaTheme
-import com.starter.app.wrappers.GoogleAuthProvider
-import com.starter.app.wrappers.signInWithPopup
+import com.starter.app.wrappers.decodeFirebaseAuthError
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -49,17 +49,20 @@ fun LoginPage() {
 @Composable
 private fun LoginWithGoogleOption(auth: Any) {
     val scope = rememberCoroutineScope()
+    val loginWithGoogleUseCase = remember {
+        LoginWithGoogleUseCase(auth)
+    }
 
     H1(
         attrs = Modifier
             .then(AlphaTheme.typography.latoBold)
             .onClick {
                 scope.launch {
-                    val provider = GoogleAuthProvider()
-                    signInWithPopup(auth, provider)
-                        .then<dynamic> { println("Login Success") }
-                        .catch { it.printStackTrace() }
-
+                    try {
+                        loginWithGoogleUseCase.login()
+                    } catch (e: Throwable) {
+                        println("Login with Google error: ${e.message}")
+                    }
                 }
             }
             .toAttrs()
@@ -71,18 +74,24 @@ private fun LoginWithGoogleOption(auth: Any) {
 @Composable
 private fun LoginWithPasswordOption(auth: Any) {
     val scope = rememberCoroutineScope()
+    val loginWithPasswordUseCase = remember {
+        LoginWithPasswordUseCase(auth)
+    }
 
     H1(
         attrs = Modifier
             .then(AlphaTheme.typography.latoBold)
             .onClick {
                 scope.launch {
-                    signInWithEmailAndPassword(auth, "dhaval3@gmail.com", "Abc@123#")
-                        .then<dynamic> {  }
-                        .catch {
-                            val error = decodeFirebaseAuthError(it)
-                            println(error)
-                        }
+                    try {
+                        loginWithPasswordUseCase.login(
+                            email = "dhaval3@gmail.com",
+                            password = "Abc@123#"
+                        )
+                    } catch (e: Throwable) {
+                        val authError = decodeFirebaseAuthError(e)
+                        println("Login with Password error: $authError")
+                    }
                 }
             }
             .toAttrs()
@@ -91,20 +100,5 @@ private fun LoginWithPasswordOption(auth: Any) {
     }
 }
 
-enum class FirebaseAuthError {
-    USER_DISABLED,
-    USER_NOT_FOUND,
-    INVALID_PASSWORD,
-}
 
-private fun decodeFirebaseAuthError(throwable: Throwable): FirebaseAuthError {
-    val message = throwable.message
-        ?: throw Exception("Unable to decode FirebaseAuth Error for ${throwable.message}")
 
-    return when {
-        message.contains("auth/user-disabled") -> FirebaseAuthError.USER_DISABLED
-        message.contains("auth/wrong-password") -> FirebaseAuthError.INVALID_PASSWORD
-        message.contains("auth/user-not-found") -> FirebaseAuthError.USER_NOT_FOUND
-        else -> throw Exception("Unable to decode FirebaseAuth Error for ${throwable.message}")
-    }
-}

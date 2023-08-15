@@ -2,10 +2,10 @@ package com.starter.app.pages
 
 import androidx.compose.runtime.*
 import com.starter.app.components.AuthenticationWrapper
+import com.starter.app.data.logout.LogoutUseCase
 import com.starter.app.firebaseApp
 import com.starter.app.theme.AlphaTheme
 import com.starter.app.wrappers.getAuth
-import com.starter.app.wrappers.signOut
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -16,7 +16,6 @@ import com.varabyte.kobweb.compose.ui.modifiers.onClick
 import com.varabyte.kobweb.compose.ui.toAttrs
 import com.varabyte.kobweb.core.Page
 import kotlinx.browser.sessionStorage
-import kotlinx.coroutines.await
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.H1
@@ -31,8 +30,8 @@ fun HomePage() {
     }
 
     val scope = rememberCoroutineScope()
-    val auth = remember {
-        getAuth(firebaseApp)
+    val logoutUseCase = remember {
+        LogoutUseCase(getAuth(firebaseApp) as Any)
     }
 
     AuthenticationWrapper {
@@ -58,7 +57,11 @@ fun HomePage() {
                     attrs = Modifier
                         .onClick {
                             scope.launch {
-                                signOut(auth = auth).await()
+                                try {
+                                    logoutUseCase.logout()
+                                } catch (e: Throwable) {
+                                    println("Logout error: ${e.message}")
+                                }
                             }
                         }
                         .toAttrs()
