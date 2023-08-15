@@ -1,5 +1,6 @@
 import com.varabyte.kobweb.gradle.application.util.configAsKobwebApplication
 import kotlinx.html.link
+import kotlinx.html.script
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -19,6 +20,15 @@ kobweb {
                 link {
                     href = "https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Rubik:wght@300;400;500;600;700&display=swap"
                     rel = "stylesheet"
+                }
+                link {
+                    href = "https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+                    rel = "stylesheet"
+                    type = "text/css"
+                }
+                script {
+                    type = "text/javascript"
+                    src = "https://cdn.jsdelivr.net/npm/toastify-js"
                 }
             }
         }

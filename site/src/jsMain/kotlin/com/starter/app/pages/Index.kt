@@ -5,6 +5,8 @@ import com.starter.app.components.AuthenticationWrapper
 import com.starter.app.data.logout.LogoutUseCase
 import com.starter.app.koinApplication
 import com.starter.app.theme.AlphaTheme
+import com.starter.app.util.toast.Toast
+import com.starter.app.util.toast.showError
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
 import com.varabyte.kobweb.compose.ui.Alignment
@@ -60,7 +62,7 @@ fun HomePage() {
                                 try {
                                     logoutUseCase.logout()
                                 } catch (e: Throwable) {
-                                    println("Logout error: ${e.message}")
+                                    Toast.showError("Unable to logout")
                                 }
                             }
                         }

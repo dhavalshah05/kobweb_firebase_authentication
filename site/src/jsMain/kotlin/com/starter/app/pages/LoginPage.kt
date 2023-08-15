@@ -6,6 +6,9 @@ import com.starter.app.data.login.google.LoginWithGoogleUseCase
 import com.starter.app.data.login.emailAndPassword.LoginWithPasswordUseCase
 import com.starter.app.koinApplication
 import com.starter.app.theme.AlphaTheme
+import com.starter.app.util.toast.Toast
+import com.starter.app.util.toast.showError
+import com.starter.app.util.toast.showSuccess
 import com.starter.app.wrappers.decodeFirebaseAuthError
 import com.varabyte.kobweb.compose.foundation.layout.Box
 import com.varabyte.kobweb.compose.foundation.layout.Column
@@ -57,7 +60,7 @@ private fun LoginWithGoogleOption() {
                     try {
                         loginWithGoogleUseCase.login()
                     } catch (e: Throwable) {
-                        println("Login with Google error: ${e.message}")
+                        Toast.showError("Not able to login with Google")
                     }
                 }
             }
@@ -86,8 +89,7 @@ private fun LoginWithPasswordOption() {
                             password = "Abc@123#"
                         )
                     } catch (e: Throwable) {
-                        val authError = decodeFirebaseAuthError(e)
-                        println("Login with Password error: $authError")
+                        Toast.showError("Incorrect email or password")
                     }
                 }
             }
@@ -96,6 +98,5 @@ private fun LoginWithPasswordOption() {
         Text("Click to login with Password")
     }
 }
-
 
 
