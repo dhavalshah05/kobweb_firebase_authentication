@@ -21,15 +21,13 @@ object AlphaTheme {
 
     init {
         colors = AlphaColors(
-            background = rgb(255, 255, 255),
-            primary = rgb(97 , 106 , 242),
-            gray50 = rgb(19 , 44 , 71),
-            gray30 = rgb(132, 149,160),
+            primary = rgb(61 , 85 , 204),
             white = rgb(255, 255,255),
-            orange = rgb(255, 133, 120),
-            backgroundFooter = rgb(242, 248, 252),
-            grayText = rgb(225, 236, 243),
-            grayText80 = rgba(225, 236, 243, 0.8),
+            darkest = rgb(20, 26,51),
+            dark = rgb(80, 86,115),
+            medium = rgb(135, 140,168),
+            light = rgb(218, 222,242),
+            lightest = rgb(245, 246,250),
         )
 
         typography = AlphaTypography(
